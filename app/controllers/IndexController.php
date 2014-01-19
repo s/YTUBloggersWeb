@@ -82,7 +82,6 @@ class IndexController extends Controller {
 
 			$users = DB::table('users')->get();
 
-			//print_r($value);
 			try{
 				foreach ($users as $key => $value) {				
 
@@ -96,7 +95,7 @@ class IndexController extends Controller {
 				
 				}
 			}catch(\Exception $e){
-				print_r($e->getMessage());exit();
+				
 			}
 		}
 		exit();
@@ -114,7 +113,6 @@ class IndexController extends Controller {
 
 		}catch(\Exception $e){
 			
-			print_r($e->getMessage());
 
 		}
 		
