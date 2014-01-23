@@ -2,52 +2,54 @@
 	
 @section('content')
 	<div class="starter-template">
-        <h1>Welcome to the YTU-CE Blogging Network</h1>
+        <h3>Welcome to the YTU-CE Blogging Network</h3>
         <p class="lead">You can see most recent blogs here.</p>
     </div>
 
 	<div class="container">
 		<div class="row">		
-			<div class="col-md-8 col-md-push-2">
+			<div class="col-md-11 col-md-push-1">
 				@if(sizeof($whole_data))
 		    		@foreach ($whole_data as $d)
-		    		<div class="well">
-		    			<div class="col-md-8">
-		    				<span class="label label-success pull-left post-upper-left">
-		    					<i class="fa fa-user"></i>
-		    					<a href="{{$d->post_url}}" target="_blank" class="noa">
-		    						{{$d->blog_title}}
-		    					</a>
-		    				</span>
-		    				<div class="pull-left" style="margin-left:20px;">
-		    					<h5>
+			    		<div class="col-xs-1 post_date">
+							<a target="_blank" class="noa" href="{{$d->post_url}}">
+								{{date('d',strtotime($d->post_created_at))}}
+								<div class="clearfix"></div>
+								{{substr(date('F',strtotime($d->post_created_at)),0,3)}}
+								<div class="clearfix"></div>
+								{{date('Y',strtotime($d->post_created_at))}}
+							</a>
+			    		</div>
+			    		<blockquote class="col-xs-8">
+			    			<div class="col-md-12 post_header">
+			    				<div class="pull-left post_title">
 		    						<a href="{{$d->post_url}}" class="noa" target="_blank">
 		    							@if(strlen($d->post_title)>50)
 		    								{{mb_substr($d->post_title,0,30)}}...
 		    							@else
 		    								{{$d->post_title}}
 		    							@endif
-		    						</a>
-		    					</h5>
-		    				</div>
-		    			</div>
-		    			<div class="col-md-4 pull-right "  style="text-align:right;">
-		    				<p style="margin-top:10px;">
-		    					<i class="fa fa-clock-o"></i>
-		    					<a target="_blank" class="noa" href="{{$d->post_url}}">
-		    						{{date('d F Y',strtotime($d->post_created_at))}}
-		    					</a>
-		    				</p>
-		    			</div>
+		    						</a>		    					
+			    				</div>
+			    				<div class="pull-right ">
+			    					<i class="fa fa-user"></i>
+			    					<a href="{{$d->post_url}}" target="_blank" class="noa">
+			    						{{$d->blog_title}}
+			    					</a>
+			    				</div>
+			    				
+			    			</div>
+			    			
+			    			<div class="clearfix"></div>
+			    			<div class="col-md-12">	
+			    				<p class="post_content">{{strip_tags($d->post_content)}}</p>
+			    				<a href="{{$d->post_url}}" target="_blank">
+			    					Read More on {{$d->blog_title}}
+			    				</a>
+			    			</div>
+			    			<div class="clearfix"></div>
+			    		</blockquote>
 		    			<div class="clearfix"></div>
-		    			<div class="col-md-12">	
-		    				<p style="font-style:italic !important;">{{strip_tags($d->post_content)}}</p>
-		    				<a href="{{$d->post_url}}" target="_blank">
-		    					Read More on {{$d->blog_title}}
-		    				</a>
-		    			</div>
-		    			<div class="clearfix"></div>
-		    		</div>	        	
 		    		@endforeach
 		    	@else
 		    		<div class="alert alert-info">

@@ -20,3 +20,21 @@ Route::post('/submit', 'IndexController@submit');
 Route::get('/community', 'IndexController@community');
 
 Route::get('/cron', 'IndexController@grabber');
+
+Route::get('/api', 'IndexController@api');
+
+Route::post('/api', 'IndexController@api');
+
+Route::get('/doc', 'IndexController@doc');
+
+Route::group(array('domain' => Config::get('constants.api_host_without_http')), function()
+{
+	Route::get('/get', 'ApiController@index');
+
+	Route::get('/refreshlimits', 'ApiController@refresh_limits');
+});
+
+App::missing(function($exception) 
+{
+    return Redirect::to('/');
+});

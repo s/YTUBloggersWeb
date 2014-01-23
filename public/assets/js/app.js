@@ -11,4 +11,12 @@ $(function(){
 			}
 		}
 	});
+
+	$( "#apiForm" ).validate({
+		rules: {
+			client_id: {
+				required: true				
+			}
+		}
+	});
 });

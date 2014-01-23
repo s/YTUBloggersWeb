@@ -1201,3 +1201,39 @@ h1[id] {
 	margin-top:10px;
 	font-size:13px;
 }
+.post_title{
+    font-size: 20px;
+    text-align: right;
+}
+.post_header{
+    font-size: 20px;
+}
+.post_content{
+    font-style:italic !important;
+    color:#7F8C8D;
+    font-size: 16px;
+}
+.post_date{
+    text-align: center;
+    color: #95A5A6;
+}
+.well{
+    border: none !important;
+}
+.error{
+    color:#D35400;
+}
+.help-block{
+    font-style: italic !important;
+    color:#95A5A6 !important;
+    font-size: 15px !important;
+}
+.addme_button{
+    margin-top: 20px;
+}
+.user_block{
+    height:85px;
+}
+.italic{
+    font-style: italic;
+}

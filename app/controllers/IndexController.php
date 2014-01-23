@@ -57,17 +57,17 @@ class IndexController extends Controller {
 
 						DB::table('checks')->insert(array('user_id'=>$id));						
 
-						return Redirect::to('submit')->withErrors(array("message"=>"Now you are one of us :). Happy blogging!"));
+						return Redirect::to('submit')->withErrors(array('message'=>'Now you are one of us :). Happy blogging!'));
 
 					}else{
-						return Redirect::to('submit')->withErrors(array("message"=>"An error occured."));
+						return Redirect::to('submit')->withErrors(array('message'=>'An error occured.'));
 					}
 				
 				}catch(\Exception $e){
 					
 					Input::flash();
 
-					return Redirect::to('submit')->withErrors(array("message"=>"An error occured."));
+					return Redirect::to('submit')->withErrors(array('message'=>'An error occured.'));
 				} 
 		    }
 		}
@@ -175,5 +175,58 @@ class IndexController extends Controller {
 		$whole_data = User::paginate('10');
 
 		$this->layout->content = View::make('community')->with('whole_data', $whole_data);
+	}
+	public function api(){		
+
+		if(sizeof(Input::all())){
+			
+			$rules = array(
+	        	'client_id' => array('required','unique:clients,client_id')
+		    );		    
+
+		    $validation = Validator::make(Input::all(), $rules);
+
+		    if($validation->fails()){
+		    	
+		    	Input::flash();
+
+		    	return Redirect::to('api')->withErrors($validation->messages())->withInput();
+
+		    }else{
+
+		    	try {
+		    			
+		    		$client_token = uniqid();
+
+		    		Input::merge(array('client_token'=>$client_token,'rate_limit'=>Config::get('constants.rate_limit')));	
+		    		
+					if(DB::table('clients')->insert(Input::all())){
+
+						$url = Config::get('constants.api_host_with_port');
+
+						$url = $url.'/get?client_id='.Input::get('client_id').'&client_token='.$client_token.'&limit=5';
+
+						$token = $client_token;
+
+						return View::make('api')->with('url',$url)->with('token',$client_token)->withErrors(array('message'=>'You\'ve registered your application.'));
+
+					}else{
+
+						return Redirect::to('api')->withErrors(array('message'=>'An error occured.'));
+					}
+				
+				}catch(\Exception $e){
+					
+					Input::flash();
+
+					return Redirect::to('api')->withErrors(array('message'=>'An error occured.'));
+				} 
+		    }
+		}
+		$this->layout->content = View::make('api');
+	}	
+
+	public function doc(){
+		$this->layout->content = View::make('doc')->with('api_host', Config::get('constants.api_host_with_port'));
 	}
 }

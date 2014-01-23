@@ -3,7 +3,7 @@
 @section('content')
 	
 	<div class="starter-template">
-        <h1>Who is already here?</h1>        
+        <h3>Who is already here?</h3>
     </div>
 
 	<div class="container">
@@ -11,7 +11,16 @@
 		<div class="col-md-6 col-md-push-3">
 			@if(sizeof($whole_data))
 				@foreach ($whole_data as $d)
-					<div class="well">
+					<div class="col-xs-2 post_date">
+						<a target="_blank" class="noa" href="{{$d->post_url}}">
+							{{date('d',strtotime($d->created_at))}}
+							<div class="clearfix"></div>
+							{{substr(date('F',strtotime($d->created_at)),0,3)}}
+							<div class="clearfix"></div>
+							{{date('Y',strtotime($d->created_at))}}
+						</a>
+		    		</div>
+					<blockquote class="col-xs-8 user_block">
 		    			<p>
 		    				<i class="fa fa-anchor"></i>
 		    				<a href="{{$d->url}}" target="_blank">{{$d->url}}</a>
@@ -21,9 +30,9 @@
 		    				<a href="mailto:{{$d->email}}">
 		    					{{$d->email}}
 		    				</a>
-		    			</p>
-		    			<p><i class="fa fa-clock-o"></i> {{date('d F Y',strtotime($d->created_at))}}</p>
-		    		</div>
+		    			</p>		    			
+		    		</blockquote>
+		    		<div class="clearfix"></div>
 			    @endforeach
 			@else
 				<div class="alert alert-info">
