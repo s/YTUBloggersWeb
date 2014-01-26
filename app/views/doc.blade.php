@@ -10,7 +10,7 @@
         <p class="italic">
             Example query:
         </p>
-        http://{{$api_host}}/get?client_id={YOUR_CLIENT_ID}&client_token={YOUR_CLIENT_TOKEN}&limit=5&offset=5
+        http://{{$api_host}}/get?client_id={YOUR_CLIENT_ID}&client_token={YOUR_CLIENT_TOKEN}&limit=1&offset=5
         <p class="italic">
             Example response:
         </p>
@@ -35,10 +35,10 @@
         </p>
         <table>
             <tr>
-                <td>client_id:</td><td> Your client id when you specify registering.</td>
+                <td>client_id:</td><td> Your client id when you specify registering. (required)</td>
             </tr>
             <tr>
-                <td>client_token:</td><td> Your client token given by system when you registered.</td>
+                <td>client_token:</td><td> Your client token given by system when you registered. (required)</td>
             </tr>
             <tr>
                 <td>limit:</td><td> Limits the size of the returning data. Max 50 data will be returned at once. (required)</td>

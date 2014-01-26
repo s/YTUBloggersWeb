@@ -1237,3 +1237,12 @@ h1[id] {
 .italic{
     font-style: italic;
 }
+.loginForm{
+  margin-top: 10%;
+}
+.bottom-mail{
+    height: 50px !important;
+}
+.bottom-mail-heading{
+    color:#fff !important;font-weight:inherit;margin-bottom:30px;
+}

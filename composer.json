@@ -6,7 +6,8 @@
 	"require": {
 		"laravel/framework": "4.1.*",
 		"thujohn/rss": "dev-master",
-		"dg/rss-php":"dev-master"
+		"dg/rss-php":"dev-master",
+		"roumen/feed": "dev-master"
 	},
 	"autoload": {
 		"classmap": [

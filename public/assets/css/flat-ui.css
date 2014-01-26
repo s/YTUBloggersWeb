@@ -4493,3 +4493,83 @@ footer p {
 .mal {
   margin-left: 20px;
 }
+.bottom-menu {
+  background: #ebedef;
+  color: #b8bfc7;
+  padding: 40px 0;
+}
+.bottom-menu .brand {
+  font-size: 23.996px;
+  /* 24px */
+
+  margin-bottom: -6px;
+  margin-top: -8px;
+}
+.bottom-menu .title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 0;
+}
+.bottom-menu a {
+  color: inherit;
+}
+.active .bottom-menu a,
+.bottom-menu a:hover,
+.bottom-menu a:focus {
+  color: #1abc9c;
+}
+.bottom-menu .label,
+.bottom-menu .badge {
+  vertical-align: middle;
+}
+.bottom-icons {
+  font-size: 15.988px;
+  /* 16px */
+
+}
+.bottom-menu-inverse {
+  background-color: #34495e;
+  color: #677786;
+}
+.bottom-menu-large {
+  padding-bottom: 52px;
+  padding-top: 52px;
+}
+.bottom-menu-large .brand {
+  margin-top: -2px;
+}
+.bottom-menu-large .bottom-links li {
+  float: none;
+  margin-right: 0;
+}
+.bottom-links,
+.bottom-icons {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.bottom-links li,
+.bottom-icons li {
+  display: block;
+  float: left;
+  margin: 0 18px 0 0;
+}
+@media (max-width: 767px) {
+  .bottom-menu {
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .bottom-menu .brand,
+  .bottom-menu .bottom-links {
+    margin-bottom: 30px;
+  }
+  .bottom-menu .bottom-links li {
+    float: none;
+    margin-bottom: 2px;
+  }
+  .bottom-menu [class*="span"]:last-child .bottom-links {
+    margin-bottom: 0;
+  }
+}

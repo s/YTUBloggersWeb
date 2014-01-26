@@ -33,7 +33,7 @@ class ApiController extends Controller {
 
 	    				$limit = (50 < Input::get('limit') ) ? 50 : Input::get('limit');
 
-	    				$blogs = DB::table('data')->skip(Input::get('offset'))->take($limit)->get();
+	    				$blogs = DB::table('data')->orderBy('post_created_at', 'desc')->skip(Input::get('offset'))->take($limit)->get();
 
 	    				$rate_limit = (int)$client->rate_limit;
 

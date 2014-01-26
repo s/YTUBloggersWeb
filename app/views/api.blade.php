@@ -44,6 +44,18 @@
 
         <div class="clearfix"></div>
 
+        <!-- Text input-->
+        <div class="control-group">
+            <label class="control-label col-xs-3" for="email">Your E-Mail:</label>
+            <div class="controls col-xs-9">
+                <input id="email" name="email" type="text" placeholder="Your E-Mail" class="input-medium form-control" required="" value="{{Input::old('email')}}">
+                <p class="help-block">Your E-mail id.(Eg: foo@bar.com)</p>
+            </div>
+        </div>
+
+
+        <div class="clearfix"></div>
+
         <!-- Button -->
         <div class="control-group">
             <label class="control-label" for="singlebutton"></label>

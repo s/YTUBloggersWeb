@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "021ae927237db113f29eb06300bd5a94",
+    "hash": "8988d94f5d2389a604721b4495a77405",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -269,12 +269,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "75f74cabbb1f085d79b629ca70e7ee012327773e"
+                "reference": "da9970de40d99e58843b27e9f01f56bfcf1789ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/75f74cabbb1f085d79b629ca70e7ee012327773e",
-                "reference": "75f74cabbb1f085d79b629ca70e7ee012327773e",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/da9970de40d99e58843b27e9f01f56bfcf1789ff",
+                "reference": "da9970de40d99e58843b27e9f01f56bfcf1789ff",
                 "shasum": ""
             },
             "require": {
@@ -378,7 +378,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2014-01-18 23:28:30"
+            "time": "2014-01-23 04:37:24"
         },
         {
             "name": "monolog/monolog",
@@ -499,12 +499,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "0353c921bd12980399e3e6404ea3931b3356e15a"
+                "reference": "bf9956b6345a606a206ba77484d750676e0e5805"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/0353c921bd12980399e3e6404ea3931b3356e15a",
-                "reference": "0353c921bd12980399e3e6404ea3931b3356e15a",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/bf9956b6345a606a206ba77484d750676e0e5805",
+                "reference": "bf9956b6345a606a206ba77484d750676e0e5805",
                 "shasum": ""
             },
             "require": {
@@ -536,7 +536,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2013-11-27 19:33:56"
+            "time": "2014-01-20 16:24:18"
         },
         {
             "name": "patchwork/utf8",
@@ -595,12 +595,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "211e237090842f0bc1813b639633e05267fb0444"
+                "reference": "8876c820c3b31eb3f435ab6419f75aecef4b5412"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/211e237090842f0bc1813b639633e05267fb0444",
-                "reference": "211e237090842f0bc1813b639633e05267fb0444",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/8876c820c3b31eb3f435ab6419f75aecef4b5412",
+                "reference": "8876c820c3b31eb3f435ab6419f75aecef4b5412",
                 "shasum": ""
             },
             "require": {
@@ -681,7 +681,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2014-01-18 17:51:33"
+            "time": "2014-01-22 03:16:33"
         },
         {
             "name": "predis/predis",
@@ -772,6 +772,50 @@
                 "psr-3"
             ],
             "time": "2014-01-18 15:33:09"
+        },
+        {
+            "name": "roumen/feed",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/RoumenDamianoff/laravel-feed.git",
+                "reference": "98fc98d2f6ba831b7dc5b231cdf22c7aa7d5a042"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/RoumenDamianoff/laravel-feed/zipball/98fc98d2f6ba831b7dc5b231cdf22c7aa7d5a042",
+                "reference": "98fc98d2f6ba831b7dc5b231cdf22c7aa7d5a042",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "~4",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Roumen\\Feed": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Roumen Damianoff",
+                    "email": "roumen@dawebs.com",
+                    "homepage": "http://roumen.it",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A simple feed generator for Laravel 4.",
+            "homepage": "http://roumen.it/projects/laravel-feed",
+            "keywords": [
+                "feed",
+                "laravel"
+            ],
+            "time": "2014-01-22 12:33:20"
         },
         {
             "name": "stack/builder",
@@ -1346,12 +1390,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpKernel.git",
-                "reference": "eb1ed60a4a066238106721f67f664fd6382a99ea"
+                "reference": "52e247c4d53d724b376a87abdacc04db5cc747d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpKernel/zipball/eb1ed60a4a066238106721f67f664fd6382a99ea",
-                "reference": "eb1ed60a4a066238106721f67f664fd6382a99ea",
+                "url": "https://api.github.com/repos/symfony/HttpKernel/zipball/52e247c4d53d724b376a87abdacc04db5cc747d7",
+                "reference": "52e247c4d53d724b376a87abdacc04db5cc747d7",
                 "shasum": ""
             },
             "require": {
@@ -1408,7 +1452,7 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "http://symfony.com",
-            "time": "2014-01-07 13:28:54"
+            "time": "2014-01-20 06:30:15"
         },
         {
             "name": "symfony/process",
@@ -1630,7 +1674,8 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "thujohn/rss": 20,
-        "dg/rss-php": 20
+        "dg/rss-php": 20,
+        "roumen/feed": 20
     },
     "platform": [
 

@@ -27,9 +27,11 @@ class IndexController extends Controller {
 
 	public function index()
 	{
-		$whole_data = Data::orderBy('post_created_at','desc')->paginate('5');
 
-		$this->layout->content = View::make('index')->with('whole_data', $whole_data);
+		
+		$whole_data = Data::orderBy('post_created_at','desc')->paginate('8');
+
+		$this->layout->content = View::make('index',array('whole_data'=>$whole_data,'colors'=>Config::get('constants.colors')));
 	}
 
 	public function submit(){		
@@ -78,9 +80,9 @@ class IndexController extends Controller {
 
 		$token = Input::get('token');
 
-		if(isset($token) && 'blah blah' == $token){
+		if(isset($token) && 'OzA.s187ajMQa.OqFggH' == $token){
 
-			$users = DB::table('users')->get();
+			$users = DB::table('users')->where('status','1')->get();
 
 			try{
 				foreach ($users as $key => $value) {				
@@ -95,7 +97,7 @@ class IndexController extends Controller {
 				
 				}
 			}catch(\Exception $e){
-				
+				print_r($e->getMessage());exit();
 			}
 		}
 		exit();
@@ -113,6 +115,7 @@ class IndexController extends Controller {
 
 		}catch(\Exception $e){
 			
+			print_r($e->getMessage());
 
 		}
 		
@@ -172,16 +175,17 @@ class IndexController extends Controller {
 		}
 	}
 	public function community(){
-		$whole_data = User::paginate('10');
+		$whole_data = User::paginate('7');
 
-		$this->layout->content = View::make('community')->with('whole_data', $whole_data);
+		$this->layout->content = View::make('community',array('whole_data'=>$whole_data,'colors'=>Config::get('constants.colors')));
 	}
 	public function api(){		
 
 		if(sizeof(Input::all())){
 			
 			$rules = array(
-	        	'client_id' => array('required','unique:clients,client_id')
+	        	'client_id' => array('required','unique:clients,client_id'),
+	        	'email' => array('required','unique:clients,email')
 		    );		    
 
 		    $validation = Validator::make(Input::all(), $rules);
@@ -198,7 +202,11 @@ class IndexController extends Controller {
 		    			
 		    		$client_token = uniqid();
 
-		    		Input::merge(array('client_token'=>$client_token,'rate_limit'=>Config::get('constants.rate_limit')));	
+		    		Input::merge(array(
+		    						'client_token'=>$client_token,
+		    						'rate_limit'=>Config::get('constants.rate_limit')		    						
+		    						)
+		    					);
 		    		
 					if(DB::table('clients')->insert(Input::all())){
 
@@ -208,15 +216,33 @@ class IndexController extends Controller {
 
 						$token = $client_token;
 
-						return View::make('api')->with('url',$url)->with('token',$client_token)->withErrors(array('message'=>'You\'ve registered your application.'));
+						$data = array(
+						    'name'=>'sfa', 
+						    'email'=>'asfa', 
+						    'message'=>'asfa'
+						);
 
-					}else{
+						try{
+						
+							Mail::send('emails.welcome', $data, function($message)
+							{
+								$message->from('said@ozcan.co', 'Laravel');
+						    	$message->to('saidozcn@gmail.com', 'John Smith')->subject('Welcome!');
+							});							
+
+							return View::make('api')->with('url',$url)->with('token',$client_token)->withErrors(array('message'=>'You\'ve registered your application. An email has been sent to you.'));
+
+						}catch(\Exception $e){
+							return Redirect::to('api')->withErrors(array('message'=>'An error occured.'));
+						}						
+
+					}else{	
 
 						return Redirect::to('api')->withErrors(array('message'=>'An error occured.'));
 					}
 				
 				}catch(\Exception $e){
-					
+					print_r($e->getMessage());exit();
 					Input::flash();
 
 					return Redirect::to('api')->withErrors(array('message'=>'An error occured.'));
@@ -228,5 +254,58 @@ class IndexController extends Controller {
 
 	public function doc(){
 		$this->layout->content = View::make('doc')->with('api_host', Config::get('constants.api_host_with_port'));
+	}
+	public function rss(){
+
+		$this->layout = null;		
+
+	    // creating rss feed with our most recent 20 posts
+	    $posts = DB::table('data')->orderBy('post_created_at', 'desc')->take(20)->get();
+
+	    $feed = Feed::make();
+
+	    // set your feed's title, description, link, pubdate and language
+	    $feed->title = 'YTU Blogger Network';
+	    $feed->description = 'YTU Blogger Network';
+	    $feed->logo = 'http://www.yildiz.edu.tr/images/images/Yildiz_Logo.jpg';
+	    $feed->link = URL::to('rss');
+	    $feed->pubdate = $posts[0]->post_created_at;
+	    $feed->lang = 'en';
+
+	    foreach ($posts as $post)
+	    {
+	        // set item's title, author, url, pubdate and description
+	        $feed->add($post->post_title, $post->blog_title, htmlspecialchars($post->post_url), $post->post_created_at, $post->post_content);
+	    }
+
+	    // show your feed (options: 'atom' (recommended) or 'rss')
+	    return $feed->render('atom');
+	}
+
+	public function newsletter(){
+
+		if(sizeof(Input::all())){
+			
+			$rules = array(	        	
+	        	'email'		=> array('required','unique:subscriptions,email')
+		    );		    
+
+		    $validation = Validator::make(Input::all(), $rules);
+
+		    if(!$validation->fails()){
+
+		    	try{
+		    		$insert = DB::table('subscriptions')->insert(array('email'=>Input::get('email')));
+
+		    		return Redirect::to('/')->withErrors(array('message'=>'You will get weekly newsletter :)'));
+
+		    	}catch(\Exception $e){
+		    		
+		    	}
+
+		    }
+
+		    return Redirect::to('/');
+		}	
 	}
 }
