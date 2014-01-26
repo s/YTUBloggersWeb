@@ -76,7 +76,7 @@ class ApiController extends Controller {
 
 		$token = Input::get('token');
 
-		if($token && 'OzA.s187ajMQa.OqFggH' == $token){
+		if($token && 'bla bla' == $token){
 			
 			DB::table('clients')->update(array('rate_limit' => 100 ));
 
