@@ -80,7 +80,7 @@ class IndexController extends Controller {
 
 		$token = Input::get('token');
 
-		if(isset($token) && 'OzA.s187ajMQa.OqFggH' == $token){
+		if(isset($token) && 'blah bla' == $token){
 
 			$users = DB::table('users')->where('status','1')->get();
 
