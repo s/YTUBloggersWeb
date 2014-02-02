@@ -29,40 +29,57 @@ Route::get('/doc', 'IndexController@doc');
 
 Route::get('/rss', 'IndexController@rss');
 
-Route::get('/login','AdminController@login' )->before('guest');
+Route::group(array('before'=>'api','domain' => Config::get('constants.api_host_without_http')), function()
+{
+	Route::get('/v1/search', 'ApiController@search');
 
-Route::post('/login','AdminController@login' );
+	Route::get('/v1/get', 'ApiController@index');
 
-Route::get('/dashboard', 'AdminController@dashboard')->before('auth');
+	Route::get('/v1/refreshlimits', 'ApiController@refresh_limits');
+});
 
-Route::get('/changeadminstatus', 'AdminController@changeadminstatus')->before('auth');;
+Route::group(array('before' => 'guest'), function()
+{
+	Route::get('/login','AdminController@login' );
 
-Route::get('/changeuserstatus', 'AdminController@changeadminstatus')->before('auth');;
+	Route::post('/login','AdminController@login' );
+});
 
-Route::get('/settings', 'AdminController@settings')->before('auth');
+Route::group(array('before' => 'auth'), function()
+{
+	Route::get('/dashboard', 'AdminController@dashboard');
 
-Route::post('/settings', 'AdminController@settings')->before('auth');
+	Route::get('/changeadminstatus', 'AdminController@changeadminstatus');;
 
-Route::get('/adminlist', 'AdminController@adminlist')->before('auth');
+	Route::get('/changeuserstatus', 'AdminController@changeadminstatus');;
 
-Route::get('/userlist', 'AdminController@userlist')->before('auth');
+	Route::get('/settings', 'AdminController@settings');
 
-Route::get('/addnewadmin', 'AdminController@addnewadmin')->before('auth');
+	Route::post('/settings', 'AdminController@settings');
 
-Route::post('/addnewadmin', 'AdminController@addnewadmin')->before('auth');
+	Route::get('/adminlist', 'AdminController@adminlist');
 
-Route::get('/logout', 'AdminController@logout')->before('auth');
+	Route::get('/userlist', 'AdminController@userlist');
+
+	Route::get('/addnewadmin', 'AdminController@addnewadmin');
+
+	Route::post('/addnewadmin', 'AdminController@addnewadmin');
+
+	Route::get('/logout', 'AdminController@logout');
+});
+
+//Route::get('/fix', 'IndexController@fix');
+
+Route::get('/weeklynewsletter', 'IndexController@weeklynewsletter');
+
+Route::get('/search', 'IndexController@search');
 
 Route::post('/newsletter', 'IndexController@newsletter');
 
-Route::group(array('domain' => Config::get('constants.api_host_without_http')), function()
-{
-	Route::get('/get', 'ApiController@index');
-
-	Route::get('/refreshlimits', 'ApiController@refresh_limits');
-});
+Route::get('/{slug}', 'IndexController@permalink');
 
 App::missing(function($exception) 
-{	
-    return Redirect::to(Config::get('constants.host_with_port'));
+{		
+	//print_r($exception);exit;
+    return Redirect::to('/');
 });

@@ -28,10 +28,27 @@ class IndexController extends Controller {
 	public function index()
 	{
 
-		
-		$whole_data = Data::orderBy('post_created_at','desc')->paginate('8');
+		$order = Input::get('order');
 
-		$this->layout->content = View::make('index',array('whole_data'=>$whole_data,'colors'=>Config::get('constants.colors')));
+		if($order){
+			$splitted = explode('_', $order);
+
+			$asc = $splitted[1];
+
+			$filter = $splitted[0];
+		
+			if ('alpha' == $filter) {
+				$whole_data = Data::orderBy('post_title',$asc)->paginate('6');
+			}else if ('recent' == $filter) {
+				$whole_data = Data::orderBy('post_created_at',$asc)->paginate('6');
+			}else if ('view' == $filter) {
+				$whole_data = Data::orderBy('post_view_count',$asc)->paginate('6');
+			}
+		}else{
+			$whole_data = Data::orderBy('post_created_at','desc')->paginate('6');
+		}		
+
+		$this->layout->content = View::make('index',array('order'=>$order,'host' => Config::get('constants.host'),'whole_data'=>$whole_data,'colors'=>Config::get('constants.colors')));
 	}
 
 	public function submit(){		
@@ -57,7 +74,17 @@ class IndexController extends Controller {
 
 					if($id = DB::table('users')->insertGetId(Input::all())){
 
-						DB::table('checks')->insert(array('user_id'=>$id));						
+						DB::table('checks')->insert(array('user_id'=>$id));
+
+						$data['from']['address'] = 'help@ytubloggers.com';
+
+						$data['from']['name'] = 'YTUBloggers';
+
+						Mail::send('emails.welcome', $data, function($message)
+						{
+							$message->from('help@ytubloggers.com','YTUBloggers');
+						    $message->to(Input::get('email'))->subject('Welcome!');
+						});
 
 						return Redirect::to('submit')->withErrors(array('message'=>'Now you are one of us :). Happy blogging!'));
 
@@ -66,6 +93,8 @@ class IndexController extends Controller {
 					}
 				
 				}catch(\Exception $e){
+
+					print_r($e->getMessage());exit;
 					
 					Input::flash();
 
@@ -80,7 +109,7 @@ class IndexController extends Controller {
 
 		$token = Input::get('token');
 
-		if(isset($token) && 'blah bla' == $token){
+		if(isset($token) && 'blah' == $token){
 
 			$users = DB::table('users')->where('status','1')->get();
 
@@ -130,20 +159,34 @@ class IndexController extends Controller {
 			foreach($object->channel->item as $key => $value){
 				
 				$date = strtotime((string)$value->pubDate);				
-				
-				if($latest_post_date < $date){					
 					
-					$insert['post_url'] = (string)$value->link;
+				$insert['post_url'] = (string)$value->link;
 				
-					$insert['post_content'] = (string)$value->description;
+				$insert['post_content'] = (string)$value->description;
 
-					$insert['post_title'] = (string)$value->title;
-				
-					$insert['post_created_at'] = date('Y-m-d H:i:s',$date);
+				$insert['post_title'] = (string)$value->title;
+			
+				$insert['post_created_at'] = date('Y-m-d H:i:s',$date);
 
-					$insert['user_id'] = $user_id;					
-				
+				$insert['user_id'] = $user_id;				
+
+				if($latest_post_date < $date){
+					
+					$slug = $this->slug((string)$insert['post_title']);
+			
+					$count = DB::table('data')->where('slug','LIKE',$slug.'%')->count();
+
+					if($count>=1)
+						$slug = $slug.'-'.($count+1);
+					
+					$insert['slug'] = $slug;
+
 					DB::table('data')->insert($insert);
+				
+				}else{
+
+					DB::table('data')->where('post_url',$insert['post_url'])->update($insert);
+
 				}
 				
 			}
@@ -155,27 +198,47 @@ class IndexController extends Controller {
 
 				$date = strtotime((string)$value->published);
 				
-				if($latest_post_date < $date){
+				$link = (array)$value->link;
+					
+				$insert['post_url'] = (string)$link['@attributes']['href'];
+				
+				$insert['post_content'] = (string)mb_substr($value->content, 0, 600);
 
-					$link = (array)$value->link;
-					
-					$insert['post_url'] = (string)$link['@attributes']['href'];
-					
-					$insert['post_content'] = (string)mb_substr($value->content, 0, 600);
+				$insert['post_title'] = (string)$value->title;
+				
+				$insert['post_created_at'] = date('Y-m-d H:i:s',$date);
 
-					$insert['post_title'] = (string)$value->title;
-					
-					$insert['post_created_at'] = date('Y-m-d H:i:s',$date);
+				$insert['user_id'] = $user_id;		
 
-					$insert['user_id'] = $user_id;					
-					
-					DB::table('data')->insert($insert);
+				try{
+					if($latest_post_date < $date){
+
+						echo "girdime";exit;
+
+						$slug = $this->slug((string)$insert['post_title']);
+
+						$count = DB::table('data')->where('slug','LIKE',$slug.'%')->count();			
+
+						if($count>=1)
+							$slug = $slug.'-'.($count+1);
+						
+						$insert['slug'] = $slug;
+						
+						DB::table('data')->insert($insert);
+
+					}else{											
+						DB::table('data')->where('post_url',(string)$link['@attributes']['href'])->update($insert);	
+					}
+				}catch(\Exception $e){
+					//print_r($e->getTrace());exit;
 				}
 			}
 		}
+
+		//$this->tweet($insert);		
 	}
 	public function community(){
-		$whole_data = User::paginate('7');
+		$whole_data = Users::where('status','1')->paginate('8');		
 
 		$this->layout->content = View::make('community',array('whole_data'=>$whole_data,'colors'=>Config::get('constants.colors')));
 	}
@@ -207,42 +270,50 @@ class IndexController extends Controller {
 		    						'rate_limit'=>Config::get('constants.rate_limit')		    						
 		    						)
 		    					);
-		    		
-					if(DB::table('clients')->insert(Input::all())){
+		    		try{
+						if(DB::table('clients')->insert(Input::all())){
 
-						$url = Config::get('constants.api_host_with_port');
+							$url = Config::get('constants.api_host_with_port');
 
-						$url = $url.'/get?client_id='.Input::get('client_id').'&client_token='.$client_token.'&limit=5';
+							$url = $url.'/v1/get?client_id='.Input::get('client_id').'&client_token='.$client_token.'&limit=5';
 
-						$token = $client_token;
+							$token = $client_token;						
 
-						$data = array(
-						    'name'=>'sfa', 
-						    'email'=>'asfa', 
-						    'message'=>'asfa'
-						);
+							try{
+							
+								$view_data['token'] = $token;
 
-						try{
-						
-							Mail::send('emails.welcome', $data, function($message)
-							{
-								$message->from('said@ozcan.co', 'Laravel');
-						    	$message->to('saidozcn@gmail.com', 'John Smith')->subject('Welcome!');
-							});							
+								$view_data['title'] = 'Your Application is created.';
 
-							return View::make('api')->with('url',$url)->with('token',$client_token)->withErrors(array('message'=>'You\'ve registered your application. An email has been sent to you.'));
+								$view_data['description'] = 'Your Application '. Input::get('name'). ' is now registered.';
 
-						}catch(\Exception $e){
+								$view_data['url'] = $url;							
+
+								Mail::send('emails.welcome_api', $view_data, function($message)
+								{
+									$message->from('ytubloggers@gmail.com','YTUBloggers');
+								    $message->to(Input::get('email'))->subject('Welcome!');
+								});							
+
+								return View::make('api')->with('url',$url)->with('token',$client_token)->withErrors(array('message'=>'You\'ve registered your application. An email has been sent to you.'));
+
+							}catch(\Exception $e){
+								Input::flash();
+								
+								return Redirect::to('api')->withErrors(array('message'=>'An error occured.'));
+							}						
+
+						}else{	
+							Input::flash();
 							return Redirect::to('api')->withErrors(array('message'=>'An error occured.'));
-						}						
-
-					}else{	
-
-						return Redirect::to('api')->withErrors(array('message'=>'An error occured.'));
+						}
+					}catch(\Exception $e){
+						Input::flash();
+						
 					}
 				
 				}catch(\Exception $e){
-					print_r($e->getMessage());exit();
+					
 					Input::flash();
 
 					return Redirect::to('api')->withErrors(array('message'=>'An error occured.'));
@@ -307,5 +378,111 @@ class IndexController extends Controller {
 
 		    return Redirect::to('/');
 		}	
+	}
+
+	public function permalink($slug){
+
+		try{
+			$page = DB::table('data')->where('slug', '=', $slug)->first();
+			
+			if(!sizeof($page)){
+				return Redirect::to(Config::get('constants.host_with_port'));	
+			}else{
+				Data::where('slug','=',$slug)->first()->increment('post_view_count');
+			}
+
+		}catch(\Exception $e){	    	
+	    	return Redirect::to(Config::get('constants.host_with_port'));
+	    }
+
+	    return View::make('permalink', array('host' => Config::get('constants.host'),'whole_data' => $page,'colors' => Config::get('constants.colors')));
+	}
+	public function fix(){
+
+		$data = DB::table('data')->get();
+
+		foreach ($data as $key => $value) {
+
+			$slug = $this->slug($value->post_title);
+			
+			$count = DB::table('data')->where('slug','LIKE',$slug.'%')->count();
+
+			echo $slug."<br/>";
+
+			if($count>=1)
+				$slug = $slug.'-'.($count+1);
+
+
+			DB::table('data')->where('id',$value->id)->update(array('slug'=>$slug));
+		}
+		exit;
+	}
+
+	public function slug($value)
+	{  	
+		print_r($value);exit;
+		$value = str_replace("ç", 'c', $value);
+		$value = str_replace("ö", 'o', $value);
+		$value = str_replace("ğ", 'g', $value);
+		$value = str_replace("ş", 's', $value);
+		$value = str_replace("ü", 'u', $value);
+		$value = str_replace("Ç", 'C', $value);
+		$value = str_replace("Ö", 'O', $value);
+		$value = str_replace("Ğ", 'G', $value);
+		$value = str_replace("Ş", 'S', $value);
+		$value = str_replace("Ü", 'U', $value);
+		$value = str_replace("İ", 'i', $value);
+		$value = str_replace("ı", 'i', $value);
+
+	    $value = str_replace("@", ' at ', $value);
+	    $value = str_replace("&", ' and ', $value);
+	    $value = str_replace("£", ' pound ', $value);
+	    $value = str_replace("#", ' hash ', $value);
+	    $value = preg_replace("/[\-+]/", ' ', $value);
+	    $value = preg_replace("/[\s+]/", ' ', $value);
+	    $value = preg_replace("/[\.+]/", '.', $value);
+	    $value = preg_replace("/[^A-Za-z0-9\.\s]/", '', $value);
+	    $value = preg_replace("/[\s]/", '-', $value);
+	    $value = preg_replace("/\-\-+/", '-', $value);
+
+	    $value = strtolower($value);
+
+	    if (substr($value, -1) == "-") { $value = substr($value, 0, -1); }
+	    if (substr($value, 0, 1) == "-") { $value = substr($value, 1); }
+
+	    return $value;
+	}
+
+	public function tweet(){
+
+	}
+
+	public function search(){
+
+		$q = Input::get('q');
+		
+		if (strlen($q)) {
+			
+			$whole_data = Data::where('status','=','1')->where('post_title', 'LIKE', "%$q%")->paginate('8');			
+			
+			$whole_data->setBaseUrl('search');			
+			
+			$this->layout->content = View::make('search',array('host' => Config::get('constants.host'),'q'=>$q,'whole_data'=>$whole_data,'colors'=>Config::get('constants.colors')));
+
+		}else{
+			return Redirect::to(Config::get('constants.host_with_port'));
+		}
+		
+	}
+
+	public function weeklynewsletter(){
+		$token = Input::get('token');
+
+		if(isset($token) && 'blah' == $token){
+			
+			$posts = Data::where('status','1')->take(3)->get();
+		}
+
+		exit;
 	}
 }

@@ -10,7 +10,7 @@
         <p class="italic">
             Example query:
         </p>
-        http://{{$api_host}}/get?client_id={YOUR_CLIENT_ID}&client_token={YOUR_CLIENT_TOKEN}&limit=1&offset=5
+        http://{{$api_host}}/v1/get?client_id={YOUR_CLIENT_ID}&client_token={YOUR_CLIENT_TOKEN}&limit=1&offset=5
         <p class="italic">
             Example response:
         </p>

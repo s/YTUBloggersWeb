@@ -42,6 +42,61 @@ Route::filter('auth', function()
 	
 });
 
+Route::filter('api', function()
+{
+
+	$fail = 0;
+
+	if(strlen(Input::get('client_id'))){
+		
+		$client = DB::table('clients')->where('client_id', Input::get('client_id'))->first();
+
+		if(!sizeof($client)){
+			$response['message'] = 'Client not recognized.';
+
+			$response['status'] = 0;			
+		}else{
+			if($client->client_token == Input::get('client_token')){
+
+    			if( 0 < $client->rate_limit ){
+
+    				
+
+    			}else{
+
+    				$fail = 1;
+
+    				$response['message'] = 'Your rate limit exceeded.';
+
+		    		$response['status'] = 0;			    		
+
+    			}
+
+    		}else{
+ 				
+ 				$fail = 1;
+
+    			$response['message'] = 'Client token is wrong.';
+
+	    		$response['status'] = 0;		    		
+    		}
+		}
+	}else{
+
+		$fail = 1;
+
+		$response['message'] = 'Client not recognized.';
+
+		$response['status'] = 0;
+
+	}
+
+	if ($fail) {
+		return Response::json($response);
+	}	
+	
+});
+
 Route::filter('guest', function()
 {
 	

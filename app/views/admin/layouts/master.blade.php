@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" ng-app="SearchHub">
     <head>
-        <title>YTU-CE Blogger Network</title>
+        <title>YTU Blogger Network</title>
 
         <link rel="stylesheet" href="{{ URL::asset('assets/css/bootstrap.css') }}">        
         <link rel="stylesheet" href="{{ URL::asset('assets/css/app.css') }}">        

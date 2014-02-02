@@ -12,8 +12,21 @@
                     <table border="0" cellpadding="20" cellspacing="0" width="600" id="emailContainer">
                         <tr>
                             <td align="left" valign="top">
-                                <h1>Welcome to the YTUBloggers!</h1>
-                                You are now signed up to YTUBloggers. Your account will be active as soon as an admin approve your request. You will also get an email when your account is active.
+                                <h1>{{$title}}</h1>
+                            </td>
+                        <tr>
+                            <td>
+                                {{$description}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Your client token: {{$token}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Example request for your token: {{$url}}
                             </td>
                         </tr>
                     </table>

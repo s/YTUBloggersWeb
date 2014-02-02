@@ -10,7 +10,7 @@
 		<div class="col-md-12">
 			@if($errors->has())
 	            @foreach ($errors->all() as $error)
-	                <div class="alert alert-danger">{{$error}}</div>        
+	                <div class="alert alert-info">{{$error}}</div>        
 	            @endforeach
         	@endif
 			@if(sizeof($users))
@@ -28,7 +28,11 @@
 						@foreach ($users as $d)
 							<tr>
 								<td>{{$d->id}}</td>
-								<td>{{$d->url}}</td>
+								<td>
+									<a href="{{$d->url}}" target="_blank">
+										{{$d->url}}
+									</a>
+								</td>
 								<td>{{$d->email}}</td>
 								<td>{{$d->created_at}}</td>
 								<td>
