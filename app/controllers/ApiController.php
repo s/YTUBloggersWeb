@@ -106,4 +106,22 @@ class ApiController extends Controller {
 			return 0;
 		}
 	}
+
+	public function newsletter(){
+
+		$subscribe = Helpers::subscribe(Input::all());
+
+		$response['status'] = 0;
+
+		if(0 == $subscribe){
+			$response['message']='Please enter all the required blanks.';
+		}else if( 1 == $subscribe){
+			$response['message']='An error occured.';
+		}else if( 2 == $subscribe){
+			$response['status'] = 1;
+			$response['message']='You will get weekly newsletter :)';
+		}
+
+		return Response::json($response);
+	}
 }

@@ -355,29 +355,16 @@ class IndexController extends Controller {
 
 	public function newsletter(){
 
-		if(sizeof(Input::all())){
-			
-			$rules = array(	        	
-	        	'email'		=> array('required','unique:subscriptions,email')
-		    );		    
+		$subscribe = Helpers::subscribe(Input::all());
 
-		    $validation = Validator::make(Input::all(), $rules);
+		if(0 == $subscribe){
+			return Redirect::to('/')->withErrors(array('message'=>'Please enter all the required blanks.'));
+		}else if( 1 == $subscribe){
+			return Redirect::to('/')->withErrors(array('message'=>'An error occured.'));
+		}else if( 2 == $subscribe){
+			return Redirect::to('/')->withErrors(array('message'=>'You will get weekly newsletter :)'));
+		}
 
-		    if(!$validation->fails()){
-
-		    	try{
-		    		$insert = DB::table('subscriptions')->insert(array('email'=>Input::get('email')));
-
-		    		return Redirect::to('/')->withErrors(array('message'=>'You will get weekly newsletter :)'));
-
-		    	}catch(\Exception $e){
-		    		
-		    	}
-
-		    }
-
-		    return Redirect::to('/');
-		}	
 	}
 
 	public function permalink($slug){
