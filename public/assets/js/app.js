@@ -1,4 +1,9 @@
 $(function(){
+	$( "#search_form_container").on("submit",function(e){
+		if($(this).find("#q").val() == ''){
+			e.preventDefault();
+		}
+	});
 	$( "#submitForm" ).validate({
 		rules: {
 			url: {
@@ -77,4 +82,18 @@ $(function(){
 			}
 		}
 	});
+
+	$("body").on("click","#search_icon",function(e){
+		
+		$(this).addClass("hide");
+		$("#search_form_container").removeClass("hide");
+		$("#search_form_container input#q").focus();
+	});
+
+	$('.container').on("click",function(e){
+		if("q" != e.target.getAttribute("id")){
+			$("#search_form_container").addClass("hide");
+			$("#search_icon").removeClass("hide");
+		}
+	})
 });

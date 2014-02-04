@@ -70,12 +70,9 @@
 					    				<a href="https://twitter.com/share" class="twitter-share-button" data-via="ytubloggers" data-url="{{$host.'/'.$d->slug}}" data-text="{{$d->post_title}}">Tweet</a>
 					    			</div>
 				    			</div>
-				    		</blockquote>			    					    			
+				    		</blockquote>
+				    		<div class="clearfix"></div>
 			    		@endforeach
-			    	</div>
-			    	<div class="clearfix"></div>
-			    	<div class="col-md-9 col-md-push-3">
-			    		<?php echo $whole_data->appends(array('q'=>$q))->links(); ?>
 			    	</div>
 		    	@elseif(sizeof($whole_data)>=4)
 		    		@foreach ($whole_data as $d)			    		

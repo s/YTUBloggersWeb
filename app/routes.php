@@ -31,6 +31,8 @@ Route::get('/rss', 'IndexController@rss');
 
 Route::group(array('before'=>'api','domain' => Config::get('constants.api_host_without_http')), function()
 {
+	Route::get('/v1/newsletter', 'ApiController@newsletter');
+	
 	Route::get('/v1/search', 'ApiController@search');
 
 	Route::get('/v1/get', 'ApiController@index');
@@ -75,6 +77,8 @@ Route::get('/weeklynewsletter', 'IndexController@weeklynewsletter');
 Route::get('/search', 'IndexController@search');
 
 Route::post('/newsletter', 'IndexController@newsletter');
+
+//Route::get('/postalltweets', 'IndexController@postalltweets');
 
 Route::get('/{slug}', 'IndexController@permalink');
 

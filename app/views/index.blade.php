@@ -18,7 +18,7 @@
 		</div>
 		<div class="row">			
 			<div class="col-md-8 col-md-push-1">
-				<label for="filter" class="pull-left" style="font-size:20px;margin-top:-2px;">Filter:</label>
+				<label for="filter" class="pull-left" style="font-size:20px;margin-top:-2px;">Sort:</label>
 				<select name="filter" id="filter" class="col-md-8 pull-left" onchange="location = this.options[this.selectedIndex].value;">
 					<option value="">Choose</option>
 					<option value="{{URL::to('/')}}?order=alpha_asc" {{$order == 'alpha_asc' ? 'selected' : '';}}>Alphabetic</option>
@@ -52,11 +52,13 @@
 			    			<div class="col-md-12 post_header">
 			    				<div class="pull-left post_title">
 		    						<a href="{{$d->post_url}}" class="noa" target="_blank">
-		    							@if(strlen($d->post_title)>50)
-		    								{{mb_substr($d->post_title,0,30)}}...
+		    							
+		    							@if(mb_strlen($d->post_title)> 50)
+		    								{{mb_substr($d->post_title,0,50)}}...
 		    							@else
 		    								{{$d->post_title}}
 		    							@endif
+			    						
 		    						</a>		    					
 			    				</div>
 			    				<div class="pull-right ">
