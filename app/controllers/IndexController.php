@@ -94,7 +94,7 @@ class IndexController extends Controller {
 				
 				}catch(\Exception $e){
 
-					print_r($e->getMessage());exit;
+					//print_r($e->getMessage());exit;
 					
 					Input::flash();
 
@@ -109,7 +109,7 @@ class IndexController extends Controller {
 
 		$token = Input::get('token');
 
-		if(isset($token) && 'blah' == $token){
+		if(isset($token) && 'OzA.s187ajMQa.OqFggH' == $token){
 
 			$users = DB::table('users')->where('status','1')->get();
 
@@ -126,7 +126,8 @@ class IndexController extends Controller {
 				
 				}
 			}catch(\Exception $e){
-				print_r($e->getMessage());exit();
+				print_r($value);
+				print_r($e->getMessage());
 			}
 		}
 		exit();
@@ -143,6 +144,8 @@ class IndexController extends Controller {
 			$this->insert_one_feed($rss,$latest_post_date, $user_id);
 
 		}catch(\Exception $e){
+
+			print_r($feed);
 			
 			print_r($e->getMessage());
 
@@ -182,8 +185,14 @@ class IndexController extends Controller {
 					$insert['slug'] = $slug;
 
 					DB::table('data')->insert($insert);
+
+					$this->tweet($insert);
 				
 				}else{
+
+					if (isset($insert['slug'])) {
+						unset($insert['slug']);
+					}
 
 					DB::table('data')->where('post_url',$insert['post_url'])->update($insert);
 
@@ -213,8 +222,6 @@ class IndexController extends Controller {
 				try{
 					if($latest_post_date < $date){
 
-						echo "girdime";exit;
-
 						$slug = $this->slug((string)$insert['post_title']);
 
 						$count = DB::table('data')->where('slug','LIKE',$slug.'%')->count();			
@@ -226,7 +233,13 @@ class IndexController extends Controller {
 						
 						DB::table('data')->insert($insert);
 
-					}else{											
+						$this->tweet($insert);
+
+					}else{
+						if (isset($insert['slug'])) {
+							unset($insert['slug']);
+						}
+
 						DB::table('data')->where('post_url',(string)$link['@attributes']['href'])->update($insert);	
 					}
 				}catch(\Exception $e){
@@ -407,7 +420,7 @@ class IndexController extends Controller {
 
 	public function slug($value)
 	{  	
-		print_r($value);exit;
+		
 		$value = str_replace("ç", 'c', $value);
 		$value = str_replace("ö", 'o', $value);
 		$value = str_replace("ğ", 'g', $value);
@@ -440,17 +453,13 @@ class IndexController extends Controller {
 	    return $value;
 	}
 
-	public function tweet(){
-
-	}
-
 	public function search(){
 
 		$q = Input::get('q');
 		
 		if (strlen($q)) {
 			
-			$whole_data = Data::where('status','=','1')->where('post_title', 'LIKE', "%$q%")->paginate('8');			
+			$whole_data = Data::where('status','=','1')->where('post_title', 'LIKE', "%$q%")->orderBy('post_created_at','desc')->paginate('8');			
 			
 			$whole_data->setBaseUrl('search');			
 			
@@ -465,11 +474,44 @@ class IndexController extends Controller {
 	public function weeklynewsletter(){
 		$token = Input::get('token');
 
-		if(isset($token) && 'blah' == $token){
+		if(isset($token) && 'OzA.s187ajMQa.OqFggH' == $token){
 			
 			$posts = Data::where('status','1')->take(3)->get();
 		}
 
 		exit;
+	}
+
+	public function postalltweets(){
+		$posts = Data::where('status','1')->get();
+		
+		foreach ($posts as $key => $value) {
+			$tweet = '';			
+
+			$tweet.= 'http://ytubloggers.com/'.$value->slug.' on YTUBloggers Network';
+
+			$kalan = 140 - 45;
+
+			$tweet = mb_substr($value->post_title,0,$kalan-4).'... '.$tweet;
+
+			echo $tweet.'<br/>';
+
+			echo Twitter::postTweet(array('status' => $tweet, 'format' => 'json'));
+			exit;
+			//sleep(10);			
+		}
+		exit;
+	}
+
+	public function tweet($insert){
+		$tweet = '';			
+
+		$tweet.= Config::get('constants.host').'/'.$insert->slug.' on YTUBloggers Network';
+
+		$kalan = 140 - 45;
+
+		$tweet = mb_substr($insert->post_title,0,$kalan-4).'... '.$tweet;
+		
+		Twitter::postTweet(array('status' => $tweet, 'format' => 'json'));
 	}
 }
