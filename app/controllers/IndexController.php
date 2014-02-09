@@ -51,57 +51,60 @@ class IndexController extends Controller {
 		$this->layout->content = View::make('index',array('order'=>$order,'host' => Config::get('constants.host'),'whole_data'=>$whole_data,'colors'=>Config::get('constants.colors')));
 	}
 
-	public function submit(){		
+	public function submit(){	
 
-		if(sizeof(Input::all())){
-			
-			$rules = array(
-	        	'url' 		=> array('required','unique:users,url'),	        	
-	        	'email'		=> array('required','unique:users,email')
-		    );		    
-
-		    $validation = Validator::make(Input::all(), $rules);
-
-		    if($validation->fails()){
-		    	
-		    	Input::flash();
-
-		    	return Redirect::to('submit')->withErrors($validation->messages())->withInput();
-
-		    }else{
-
-		    	try {
-
-					if($id = DB::table('users')->insertGetId(Input::all())){
-
-						DB::table('checks')->insert(array('user_id'=>$id));
-
-						$data['from']['address'] = 'help@ytubloggers.com';
-
-						$data['from']['name'] = 'YTUBloggers';
-
-						Mail::send('emails.welcome', $data, function($message)
-						{
-							$message->from('help@ytubloggers.com','YTUBloggers');
-						    $message->to(Input::get('email'))->subject('Welcome!');
-						});
-
-						return Redirect::to('submit')->withErrors(array('message'=>'Now you are one of us :). Happy blogging!'));
-
-					}else{
-						return Redirect::to('submit')->withErrors(array('message'=>'An error occured.'));
-					}
+		if(Request::is_post()){
+			if(sizeof(Input::all())){
 				
-				}catch(\Exception $e){
+				$rules = array(
+		        	'url' 		=> array('required','unique:users,url'),	        	
+		        	'email'		=> array('required','unique:users,email')
+			    );		    
 
-					//print_r($e->getMessage());exit;
+			    $validation = Validator::make(Input::all(), $rules);
+
+			    if($validation->fails()){
+			    	
+			    	Input::flash();
+
+			    	return Redirect::to('submit')->withErrors($validation->messages())->withInput();
+
+			    }else{
+
+			    	try {
+
+						if($id = DB::table('users')->insertGetId(Input::all())){
+
+							DB::table('checks')->insert(array('user_id'=>$id));
+
+							$data['from']['address'] = 'help@ytubloggers.com';
+
+							$data['from']['name'] = 'YTUBloggers';
+
+							Mail::send('emails.welcome', $data, function($message)
+							{
+								$message->from('help@ytubloggers.com','YTUBloggers');
+							    $message->to(Input::get('email'))->subject('Welcome!');
+							});
+
+							return Redirect::to('submit')->withErrors(array('message'=>'Now you are one of us :). Happy blogging!'));
+
+						}else{
+							return Redirect::to('submit')->withErrors(array('message'=>'An error occured.'));
+						}
 					
-					Input::flash();
+					}catch(\Exception $e){
 
-					return Redirect::to('submit')->withErrors(array('message'=>'An error occured.'));
-				} 
-		    }
+						//print_r($e->getMessage());exit;
+						
+						Input::flash();
+
+						return Redirect::to('submit')->withErrors(array('message'=>'An error occured.'));
+					} 
+			    }
+			}
 		}
+			
 		$this->layout->content = View::make('submit');
 	}
 
@@ -257,81 +260,83 @@ class IndexController extends Controller {
 	}
 	public function api(){		
 
-		if(sizeof(Input::all())){
-			
-			$rules = array(
-	        	'client_id' => array('required','unique:clients,client_id'),
-	        	'email' => array('required','unique:clients,email')
-		    );		    
-
-		    $validation = Validator::make(Input::all(), $rules);
-
-		    if($validation->fails()){
-		    	
-		    	Input::flash();
-
-		    	return Redirect::to('api')->withErrors($validation->messages())->withInput();
-
-		    }else{
-
-		    	try {
-		    			
-		    		$client_token = uniqid();
-
-		    		Input::merge(array(
-		    						'client_token'=>$client_token,
-		    						'rate_limit'=>Config::get('constants.rate_limit')		    						
-		    						)
-		    					);
-		    		try{
-						if(DB::table('clients')->insert(Input::all())){
-
-							$url = Config::get('constants.api_host_with_port');
-
-							$url = $url.'/v1/get?client_id='.Input::get('client_id').'&client_token='.$client_token.'&limit=5';
-
-							$token = $client_token;						
-
-							try{
-							
-								$view_data['token'] = $token;
-
-								$view_data['title'] = 'Your Application is created.';
-
-								$view_data['description'] = 'Your Application '. Input::get('name'). ' is now registered.';
-
-								$view_data['url'] = $url;							
-
-								Mail::send('emails.welcome_api', $view_data, function($message)
-								{
-									$message->from('ytubloggers@gmail.com','YTUBloggers');
-								    $message->to(Input::get('email'))->subject('Welcome!');
-								});							
-
-								return View::make('api')->with('url',$url)->with('token',$client_token)->withErrors(array('message'=>'You\'ve registered your application. An email has been sent to you.'));
-
-							}catch(\Exception $e){
-								Input::flash();
-								
-								return Redirect::to('api')->withErrors(array('message'=>'An error occured.'));
-							}						
-
-						}else{	
-							Input::flash();
-							return Redirect::to('api')->withErrors(array('message'=>'An error occured.'));
-						}
-					}catch(\Exception $e){
-						Input::flash();
-						
-					}
+		if(Request::is_post()){
+			if(sizeof(Input::all())){
 				
-				}catch(\Exception $e){
-					
-					Input::flash();
+				$rules = array(
+		        	'client_id' => array('required','unique:clients,client_id'),
+		        	'email' => array('required','unique:clients,email')
+			    );		    
 
-					return Redirect::to('api')->withErrors(array('message'=>'An error occured.'));
-				} 
-		    }
+			    $validation = Validator::make(Input::all(), $rules);
+
+			    if($validation->fails()){
+			    	
+			    	Input::flash();
+
+			    	return Redirect::to('api')->withErrors($validation->messages())->withInput();
+
+			    }else{
+
+			    	try {
+			    			
+			    		$client_token = uniqid();
+
+			    		Input::merge(array(
+			    						'client_token'=>$client_token,
+			    						'rate_limit'=>Config::get('constants.rate_limit')		    						
+			    						)
+			    					);
+			    		try{
+							if(DB::table('clients')->insert(Input::all())){
+
+								$url = Config::get('constants.api_host_with_port');
+
+								$url = $url.'/v1/get?client_id='.Input::get('client_id').'&client_token='.$client_token.'&limit=5';
+
+								$token = $client_token;						
+
+								try{
+								
+									$view_data['token'] = $token;
+
+									$view_data['title'] = 'Your Application is created.';
+
+									$view_data['description'] = 'Your Application '. Input::get('name'). ' is now registered.';
+
+									$view_data['url'] = $url;							
+
+									Mail::send('emails.welcome_api', $view_data, function($message)
+									{
+										$message->from('ytubloggers@gmail.com','YTUBloggers');
+									    $message->to(Input::get('email'))->subject('Welcome!');
+									});							
+
+									return View::make('api')->with('url',$url)->with('token',$client_token)->withErrors(array('message'=>'You\'ve registered your application. An email has been sent to you.'));
+
+								}catch(\Exception $e){
+									Input::flash();
+									
+									return Redirect::to('api')->withErrors(array('message'=>'An error occured.'));
+								}						
+
+							}else{	
+								Input::flash();
+								return Redirect::to('api')->withErrors(array('message'=>'An error occured.'));
+							}
+						}catch(\Exception $e){
+							Input::flash();
+							
+						}
+					
+					}catch(\Exception $e){
+						
+						Input::flash();
+
+						return Redirect::to('api')->withErrors(array('message'=>'An error occured.'));
+					} 
+			    }
+			}
 		}
 		$this->layout->content = View::make('api');
 	}	

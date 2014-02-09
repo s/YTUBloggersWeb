@@ -33,52 +33,54 @@ class AdminController extends Controller {
 		
 		$this->layout->content = View::make('admin.login');
 
-		if(sizeof(Input::all())){
+		if(Request::is_post()){
+			if(sizeof(Input::all())){
 
-			$rules = array(
-	        	'username' 		=> array('required'),
-	        	'password'		=> array('required')
-		    );		    
+				$rules = array(
+		        	'username' 		=> array('required'),
+		        	'password'		=> array('required')
+			    );		    
 
-		    $validation = Validator::make(Input::all(), $rules);
+			    $validation = Validator::make(Input::all(), $rules);
 
-		    if($validation->fails()){
-		    	
-		    	Input::flash();
-
-		    	return Redirect::to('login')->withErrors($validation->messages())->withInput();
-
-		    }else{
-
-		    	$credentials = array(
-		            'username' => Input::get('username'),
-		            'password' => Input::get('password')
-		        );
-						    	
-		    	try{
-			    	$user = DB::table('admin_users')->where('username',Input::get('username'))->where('status','1')->first();
+			    if($validation->fails()){
 			    	
+			    	Input::flash();
 
-			    	if(sizeof($user)){
+			    	return Redirect::to('login')->withErrors($validation->messages())->withInput();
 
-			    		if($user->password == md5(Input::get('password'))){
+			    }else{
 
-			    			Session::set('user',$user);
+			    	$credentials = array(
+			            'username' => Input::get('username'),
+			            'password' => Input::get('password')
+			        );
+							    	
+			    	try{
+				    	$user = DB::table('admin_users')->where('username',Input::get('username'))->where('status','1')->first();
+				    	
 
-			    			return Redirect::to('dashboard');
+				    	if(sizeof($user)){
 
-			    		}else{
-			    			return Redirect::to('login')->withErrors(array('message'=> 'Wrong username/password combination.'))->withInput();
-			    		}
+				    		if($user->password == md5(Input::get('password'))){
 
-			    	}else{
-			    		return Redirect::to('login')->withErrors(array('message'=> 'User not recognized.'))->withInput();
-			    	}
-			    }catch(\Exception $e){
-			    	//print_r($e->getMessage());exit();
-			    }
-		        		        
-		    }	
+				    			Session::set('user',$user);
+
+				    			return Redirect::to('dashboard');
+
+				    		}else{
+				    			return Redirect::to('login')->withErrors(array('message'=> 'Wrong username/password combination.'))->withInput();
+				    		}
+
+				    	}else{
+				    		return Redirect::to('login')->withErrors(array('message'=> 'User not recognized.'))->withInput();
+				    	}
+				    }catch(\Exception $e){
+				    	//print_r($e->getMessage());exit();
+				    }
+			        		        
+			    }	
+			}
 		}
 	}
 	public function changeadminstatus(){
@@ -136,47 +138,49 @@ class AdminController extends Controller {
 
 	public function settings(){
 
-		if(sizeof(Input::all())){
+		if(Request::is_post()){
+			if(sizeof(Input::all())){
 
-			$rules = array(
-				'password' 			=> array('required'),
-	        	'new_password' 		=> array('required'),
-	        	'new_password_again'=> array('required')
-		    );		    
+				$rules = array(
+					'password' 			=> array('required'),
+		        	'new_password' 		=> array('required'),
+		        	'new_password_again'=> array('required')
+			    );		    
 
-		    $validation = Validator::make(Input::all(), $rules);
+			    $validation = Validator::make(Input::all(), $rules);
 
-		    if($validation->fails()){
-		    	
-		    	Input::flash();
+			    if($validation->fails()){
+			    	
+			    	Input::flash();
 
-		    	return Redirect::to('settings')->withErrors($validation->messages())->withInput();
-		    }else{
+			    	return Redirect::to('settings')->withErrors($validation->messages())->withInput();
+			    }else{
 
-		    	if(Input::get('new_password') == Input::get('new_password_again')){
+			    	if(Input::get('new_password') == Input::get('new_password_again')){
 
-		    		$user = DB::table('admin_users')->where('username',Session::get('user')->username)->first();
+			    		$user = DB::table('admin_users')->where('username',Session::get('user')->username)->first();
 
-		    		if(md5(Input::get('password')) == $user->password){		    			
+			    		if(md5(Input::get('password')) == $user->password){		    			
 
-						if(DB::table('admin_users')->where('username',Session::get('user')->username)->update(array('password'=>md5(Input::get('new_password'))))){
+							if(DB::table('admin_users')->where('username',Session::get('user')->username)->update(array('password'=>md5(Input::get('new_password'))))){
 
-							return Redirect::to('settings')->withErrors(array('message'=> 'Your settings saved.'))->withInput();
+								return Redirect::to('settings')->withErrors(array('message'=> 'Your settings saved.'))->withInput();
 
-						}else{
-							return Redirect::to('settings')->withErrors(array('message'=> 'An error occured.'))->withInput();
-						}
-		    				
+							}else{
+								return Redirect::to('settings')->withErrors(array('message'=> 'An error occured.'))->withInput();
+							}
+			    				
 
-		    		}else{
-		    			return Redirect::to('settings')->withErrors(array('message'=> 'New Old password is wrong.'))->withInput();
-		    		}
+			    		}else{
+			    			return Redirect::to('settings')->withErrors(array('message'=> 'New Old password is wrong.'))->withInput();
+			    		}
 
-		    	}else{
-		    		return Redirect::to('settings')->withErrors(array('message'=> 'New Passwords mismatch.'))->withInput();
-		    	}
-		    }			
+			    	}else{
+			    		return Redirect::to('settings')->withErrors(array('message'=> 'New Passwords mismatch.'))->withInput();
+			    	}
+			    }			
 
+			}
 		}
 
 		$this->layout->content = View::make('admin.settings');
@@ -197,33 +201,35 @@ class AdminController extends Controller {
 	}
 	public function addnewadmin(){
 		
-		if(sizeof(Input::all())){
-			$rules = array(
-				'username' 		=> array('required','unique:admin_users,username'),
-				'email' 		=> array('required','unique:admin_users,email'),
-	        	'password' 		=> array('required')
-		    );		    
+		if(Request::is_post()){
+			if(sizeof(Input::all())){
+				$rules = array(
+					'username' 		=> array('required','unique:admin_users,username'),
+					'email' 		=> array('required','unique:admin_users,email'),
+		        	'password' 		=> array('required')
+			    );		    
 
-		    $validation = Validator::make(Input::all(), $rules);
+			    $validation = Validator::make(Input::all(), $rules);
 
-		    if($validation->fails()){
-		    	
-		    	Input::flash();
+			    if($validation->fails()){
+			    	
+			    	Input::flash();
 
-		    	return Redirect::to('/addnewadmin')->withErrors($validation->messages())->withInput();
-		    }else{
-		    	try{
-			    	$insert = DB::table('admin_users')->insert(array('email'=>Input::get('email'),'username'=>Input::get('username'),'password'=>md5(Input::get('password'))));
+			    	return Redirect::to('/addnewadmin')->withErrors($validation->messages())->withInput();
+			    }else{
+			    	try{
+				    	$insert = DB::table('admin_users')->insert(array('email'=>Input::get('email'),'username'=>Input::get('username'),'password'=>md5(Input::get('password'))));
 
-			    	if($insert){
-			    		return Redirect::to('/addnewadmin')->withErrors(array('message'=> 'Admin added.'))->withInput();	
-			    	}else{
-			    		return Redirect::to('/addnewadmin')->withErrors(array('message'=> 'An error occured.'))->withInput();
-			    	}
-			    }catch(\Exception $e){
+				    	if($insert){
+				    		return Redirect::to('/addnewadmin')->withErrors(array('message'=> 'Admin added.'))->withInput();	
+				    	}else{
+				    		return Redirect::to('/addnewadmin')->withErrors(array('message'=> 'An error occured.'))->withInput();
+				    	}
+				    }catch(\Exception $e){
 
+				    }
 			    }
-		    }
+			}
 		}
 		$this->layout->content = View::make('admin.addnewadmin');
 	}

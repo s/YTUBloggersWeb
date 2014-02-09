@@ -13,17 +13,17 @@
 
 Route::get('/', 'IndexController@index');
 
-//Route::get('/submit', 'IndexController@submit');
+Route::get('/submit', 'IndexController@submit');
 
-Route::any('/submit', 'IndexController@submit');
+Route::post('/submit', 'IndexController@submit');
 
 Route::get('/community', 'IndexController@community');
 
 Route::get('/cron', 'IndexController@grabber');
 
-Route::any('/api', 'IndexController@api');
+Route::get('/api', 'IndexController@api');
 
-//Route::post('/api', 'IndexController@api');
+Route::post('/api', 'IndexController@api');
 
 Route::get('/doc', 'IndexController@doc');
 
@@ -42,9 +42,9 @@ Route::group(array('before'=>'api','domain' => Config::get('constants.api_host_w
 
 Route::group(array('before' => 'guest'), function()
 {
-	Route::any('/login','AdminController@login' );
+	Route::get('/login','AdminController@login' );
 
-	//Route::post('/login','AdminController@login' );
+	Route::post('/login','AdminController@login' );
 });
 
 Route::group(array('before' => 'auth'), function()
@@ -55,17 +55,17 @@ Route::group(array('before' => 'auth'), function()
 
 	Route::get('/changeuserstatus', 'AdminController@changeadminstatus');;
 
-	//Route::get('/settings', 'AdminController@settings');
+	Route::get('/settings', 'AdminController@settings');
 
-	Route::any('/settings', 'AdminController@settings');
+	Route::post('/settings', 'AdminController@settings');
 
 	Route::get('/adminlist', 'AdminController@adminlist');
 
 	Route::get('/userlist', 'AdminController@userlist');
 
-	Route::any('/addnewadmin', 'AdminController@addnewadmin');
+	Route::get('/addnewadmin', 'AdminController@addnewadmin');
 
-	//Route::post('/addnewadmin', 'AdminController@addnewadmin');
+	Route::post('/addnewadmin', 'AdminController@addnewadmin');
 
 	Route::get('/logout', 'AdminController@logout');
 });
