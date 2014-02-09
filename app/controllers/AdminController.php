@@ -33,7 +33,7 @@ class AdminController extends Controller {
 		
 		$this->layout->content = View::make('admin.login');
 
-		if(Request::is_post()){
+		if('POST' == Request::getMethod()){
 			if(sizeof(Input::all())){
 
 				$rules = array(
@@ -138,7 +138,7 @@ class AdminController extends Controller {
 
 	public function settings(){
 
-		if(Request::is_post()){
+		if('POST' == Request::getMethod()){
 			if(sizeof(Input::all())){
 
 				$rules = array(
@@ -201,7 +201,7 @@ class AdminController extends Controller {
 	}
 	public function addnewadmin(){
 		
-		if(Request::is_post()){
+		if('POST' == Request::getMethod()){
 			if(sizeof(Input::all())){
 				$rules = array(
 					'username' 		=> array('required','unique:admin_users,username'),

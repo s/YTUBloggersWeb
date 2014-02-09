@@ -52,8 +52,8 @@ class IndexController extends Controller {
 	}
 
 	public function submit(){	
-
-		if(Request::is_post()){
+				
+		if('POST' == Request::getMethod()){
 			if(sizeof(Input::all())){
 				
 				$rules = array(
@@ -260,7 +260,7 @@ class IndexController extends Controller {
 	}
 	public function api(){		
 
-		if(Request::is_post()){
+		if('POST' == Request::getMethod()){
 			if(sizeof(Input::all())){
 				
 				$rules = array(
