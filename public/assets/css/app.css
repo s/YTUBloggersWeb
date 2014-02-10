@@ -1308,10 +1308,10 @@ html,
     height: 50px;
     border:1px solid #34495e;
     background-color: #fff;
-    color:#000;
-    margin-left: 5px;
+    color:#000;    
 }
 .sortList{
+    margin-left: -20px;
     list-style-type: none;
     float: left;
 }
