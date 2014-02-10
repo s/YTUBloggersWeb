@@ -1308,7 +1308,8 @@ html,
     height: 50px;
     border:1px solid #34495e;
     background-color: #fff;
-    color:#000;    
+    color:#000;   
+    margin-right: 5px; 
 }
 .sortList{
     margin-left: -20px;
