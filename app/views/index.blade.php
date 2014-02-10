@@ -19,7 +19,7 @@
 		<div class="row">			
 			<div class="col-md-12">
 				<ul class="pull-left sortList">
-					<li style="margin-top:2px;">
+					<li style="margin-top:2px;margin-right:20px;">
 							Sort by:
 					</li>
 
