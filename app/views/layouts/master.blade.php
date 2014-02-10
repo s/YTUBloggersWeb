@@ -6,6 +6,7 @@
         <meta name="keywords" content="YTU Blogger Network, Yıldız Teknik Üniversitesi Blogger Ağı, Yıldız, Teknik, Üniversites, Blogging, Blog">
         <meta name="author" content="Said Özcan">
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="{{ URL::asset('assets/css/bootstrap.css') }}">        
         <link rel="stylesheet" href="{{ URL::asset('assets/css/app.css') }}">
         <link rel="stylesheet" href="{{ URL::asset('assets/css/font-awesome.min.css') }}">        
