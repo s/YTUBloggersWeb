@@ -45,6 +45,7 @@ class IndexController extends Controller {
 				$whole_data = Data::orderBy('post_view_count',$asc)->paginate('6');
 			}
 		}else{
+			$order = 'recent_desc';
 			$whole_data = Data::orderBy('post_created_at','desc')->paginate('6');
 		}		
 

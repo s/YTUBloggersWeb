@@ -2,7 +2,7 @@
 	
 @section('content')
 	<div class="starter-template">
-        <h3>Welcome to the YTU-CE Blogging Network</h3>
+        <h3>Welcome to the YTU Blogging Network</h3>
         <p class="lead">You can see most recent blogs here.</p>
     </div>
 
@@ -17,18 +17,49 @@
 			</div>
 		</div>
 		<div class="row">			
-			<div class="col-md-8 col-md-push-1">
-				<label for="filter" class="pull-left" style="font-size:20px;margin-top:-2px;">Sort:</label>
-				<select name="filter" id="filter" class="col-md-8 pull-left" onchange="location = this.options[this.selectedIndex].value;">
-					<option value="">Choose</option>
-					<option value="{{URL::to('/')}}?order=alpha_asc" {{$order == 'alpha_asc' ? 'selected' : '';}}>Alphabetic</option>
-					<option value="{{URL::to('/')}}?order=alpha_desc" {{$order == 'alpha_desc' ? 'selected' : '';}}>Reverse Alphabetic</option>
-					<option value="{{URL::to('/')}}?order=recent_asc" {{$order == 'recent_asc' ? 'selected' : '';}}>Least Recent</option>
-					<option value="{{URL::to('/')}}?order=recent_desc" {{$order == 'recent_desc' ? 'selected' : '';}}>Most Recent</option>
-					<option value="{{URL::to('/')}}?order=view_asc" {{$order == 'view_asc' ? 'selected' : '';}}>Least Viewed</option>
-					<option value="{{URL::to('/')}}?order=view_desc" {{$order == 'view_desc' ? 'selected' : '';}}>Most Viewed</option>
-				</select>
-			</div>			
+			<div class="col-md-12">
+				<ul class="pull-left sortList">
+					<li style="margin-top:2px;">
+							Sort by:
+					</li>
+
+					<li>
+						<a href="{{URL::to('/')}}?order=alpha_asc">
+							<span class="label sortLabel {{$order == 'alpha_asc' ? 'sortActive' : '';}}">Alphabetic</span>
+						</a>
+					</li>
+
+					<li>
+						<a href="{{URL::to('/')}}?order=alpha_desc">
+							<span class="label sortLabel {{$order == 'alpha_desc' ? 'sortActive' : '';}}">Reverse Alphabetic</span>
+						</a>
+					</li>
+
+					<li>
+						<a href="{{URL::to('/')}}?order=recent_asc">
+							<span class="label sortLabel {{$order == 'recent_asc' ? 'sortActive' : '';}}">Least Recent</span>
+						</a>
+					</li>
+
+					<li>
+						<a href="{{URL::to('/')}}?order=recent_desc">
+							<span class="label sortLabel {{$order == 'recent_desc' ? 'sortActive' : '';}}">Most Recent</span>
+						</a>
+					</li>
+
+					<li>
+						<a href="{{URL::to('/')}}?order=view_asc">
+							<span class="label sortLabel {{$order == 'view_asc' ? 'sortActive' : '';}}">Least Viewed</span>
+						</a>
+					</li>
+
+					<li>
+						<a href="{{URL::to('/')}}?order=view_desc">
+							<span class="label sortLabel {{$order == 'view_desc' ? 'sortActive' : '';}}">Most Viewed</span>
+						</a>
+					</li>
+				</ul>
+			</div>
 			<div class="clearfix"></div>
 			<hr/>
 			<div class="col-md-12">				

@@ -1303,3 +1303,22 @@ html,
 .open > .dropdown-menu{
     margin-left: 16px;
 }
+.sortLabel{
+    width: auto;
+    height: 50px;
+    border:1px solid #34495e;
+    background-color: #fff;
+    color:#000;
+    margin-left: 5px;
+}
+.sortList{
+    list-style-type: none;
+    float: left;
+}
+.sortList li{
+    float: left;
+}
+.sortActive{
+    background-color: #34495e;
+    color:#fff;
+}
