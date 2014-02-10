@@ -1319,6 +1319,10 @@ html,
 .sortList li{
     float: left;
 }
+.sortLabel:hover{
+    background-color: #1abc9c;
+    color:#fff; 
+}
 .sortActive{
     background-color: #1abc9c;
     color:#fff;
