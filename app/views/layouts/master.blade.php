@@ -6,11 +6,13 @@
         <meta name="keywords" content="YTU Blogger Network, Yıldız Teknik Üniversitesi Blogger Ağı, Yıldız, Teknik, Üniversites, Blogging, Blog">
         <meta name="author" content="Said Özcan">
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <link rel="stylesheet" href="{{ URL::asset('assets/css/bootstrap.css') }}">        
         <link rel="stylesheet" href="{{ URL::asset('assets/css/app.css') }}">
+        <link rel="stylesheet" href="{{ URL::asset('assets/css/normalize.css') }}">
         <link rel="stylesheet" href="{{ URL::asset('assets/css/font-awesome.min.css') }}">        
-        <link rel="stylesheet" href="{{ URL::asset('assets/css/starter-template.css') }}">
+        <link rel="stylesheet" href="{{ URL::asset('assets/css/starter-template.css') }}">        
         <link rel="stylesheet" href="{{ URL::asset('assets/css/flat-ui.css') }}">
         <link rel="shortcut icon" href="{{URL::asset('assets/img/favicon.png')}}"  />
         <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
