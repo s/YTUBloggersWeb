@@ -6,6 +6,7 @@
         <p class="lead">You can create an app.</p>
     </div>
 
+
     <div class="alert alert-info col-md-8 col-md-offset-2">
         Tip: Looking for documentation? Here you go: <a href="/doc"> Api Documentation.</a>
     </div>
