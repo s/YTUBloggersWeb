@@ -278,8 +278,8 @@ class IndexController extends Controller {
 			    	return Redirect::to('api')->withErrors($validation->messages())->withInput();
 
 			    }else{
-
-			    	try {
+			    	
+				try {
 			    			
 			    		$client_token = uniqid();
 
@@ -289,7 +289,9 @@ class IndexController extends Controller {
 			    						)
 			    					);
 			    		try{
-							if(DB::table('clients')->insert(Input::all())){
+							
+							$input = Input::except('/api');
+							if(DB::table('clients')->insert($input)){
 
 								$url = Config::get('constants.api_host_with_port');
 
@@ -323,11 +325,11 @@ class IndexController extends Controller {
 
 							}else{	
 								Input::flash();
+								
 								return Redirect::to('api')->withErrors(array('message'=>'An error occured.'));
 							}
 						}catch(\Exception $e){
 							Input::flash();
-							
 						}
 					
 					}catch(\Exception $e){
