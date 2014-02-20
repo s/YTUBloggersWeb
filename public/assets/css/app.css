@@ -1308,17 +1308,23 @@ html,
     height: 50px;
     border:1px solid #34495e;
     background-color: #fff;
-    color:#000;
-    margin-left: 5px;
+    color:#000;   
+    margin-right: 5px; 
+    font-weight: 500;
 }
 .sortList{
+    margin-left: -20px;
     list-style-type: none;
     float: left;
 }
 .sortList li{
     float: left;
 }
+.sortLabel:hover{
+    background-color: #1abc9c;
+    color:#fff; 
+}
 .sortActive{
-    background-color: #34495e;
+    background-color: #1abc9c;
     color:#fff;
 }
